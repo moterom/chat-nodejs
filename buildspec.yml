@@ -1,0 +1,29 @@
+version: 0.2
+phases:
+  pre_build:
+    commands:
+      - echo Logging in to Amazon ECR...
+      - aws ecr get-login-password --region $AWS_DEFAULT_REGION | docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com
+      - docker pull  $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_BASE_CACHE
+      - COMMIT_HASH=$(echo $CODEBUILD_BUILD_NUMBER)
+      - IMAGE_TAG=${ENVIRONMENT}-${COMMIT_HASH}
+      - aws ssm get-parameter --with-decryption --name $PARAMATER --region $AWS_DEFAULT_REGION | jq '.Parameter.Value' | sed 's/[\][n]/\r/g' | sed -e 's/^"//' -e 's/"$//' > .env
+      - cat .env
+  build:
+    commands:
+      - echo Build started on `date`
+      - echo Building the Docker image...
+      - docker build --cache-from $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_BASE_CACHE --build-arg GITHUB_TOKEN=$GITHUB_TOKEN --build-arg ImageID=$AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_BASE -t $IMAGE_REPO_NAME:$IMAGE_TAG .
+      - docker tag $IMAGE_REPO_NAME:$IMAGE_TAG $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME:$IMAGE_TAG
+      - docker images
+  post_build:
+    commands:
+      - echo Build completed on `date`
+      - echo Pushing the Docker image...
+      - docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME:$IMAGE_TAG
+      - echo $COMMIT_HASH > build.aws
+artifacts:
+  files: build.aws
+cache:
+  paths:
+    - "node_modules/**/*"
