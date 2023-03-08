@@ -1,27 +1,26 @@
 steps:
-  # Pre-build phase
-  - name: 'gcr.io/cloud-builders/docker'
-    entrypoint: 'bash'
-    args:
-      - '-c'
-      - |
-        echo Logging in to Google Cloud Registry...
-        gcloud auth configure-docker
-        docker pull gcr.io/$PROJECT_ID/$IMAGE_BASE_CACHE
-        COMMIT_HASH=$(echo $BUILD_ID)
-        IMAGE_TAG=${_ENVIRONMENT}-${COMMIT_HASH}
-        gcloud secrets versions access latest --secret=$PARAMETER | sed 's/[\][n]/\r/g' | sed -e 's/^"//' -e 's/"$//' > .env
-        cat .env
-        
-  # Build phase
-  - name: 'gcr.io/cloud-builders/docker'
-    args: ['build', '--cache-from', 'gcr.io/$PROJECT_ID/$IMAGE_BASE_CACHE', '--build-arg', 'GITHUB_TOKEN=$GITHUB_TOKEN', '--build-arg', 'ImageID=gcr.io/$PROJECT_ID/$IMAGE_REPO_BASE', '-t', 'gcr.io/$PROJECT_ID/$IMAGE_REPO_NAME:$IMAGE_TAG', '.']
-    
-  # Post-build phase
-  - name: 'gcr.io/cloud-builders/docker'
-    args: ['push', 'gcr.io/$PROJECT_ID/$IMAGE_REPO_NAME:$IMAGE_TAG']
-    
-artifacts:
-  objects:
-    location: 'gs://$PROJECT_ID/cloudbuild/build.aws'
-    paths: ['build.aws']
+# This step runs the unit tests on the app
+- name: 'python:3.7-slim'
+  id: Test
+  entrypoint: /bin/sh
+  args:
+  - -c
+  - 'pip install flask && python test_app.py -v'
+
+# This step builds the container image.
+- name: 'gcr.io/cloud-builders/docker'
+  id: Build
+  args:
+  - 'build'
+  - '-t'
+  - 'us-central1-docker.pkg.dev/$PROJECT_ID/chat-nodejs/github_moterom_chat-nodejs:$SHORT_SHA'
+  - '.'
+
+# This step pushes the image to Artifact Registry
+# The PROJECT_ID and SHORT_SHA variables are automatically
+# replaced by Cloud Build.
+- name: 'gcr.io/cloud-builders/docker'
+  id: Push
+  args:
+  - 'push'
+  - 'us-central1-docker.pkg.dev/$PROJECT_ID/chat-nodejs/github_moterom_chat-nodejs:$SHORT_SHA'
