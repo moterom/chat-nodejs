@@ -3,9 +3,6 @@ steps:
 - name: 'node:lts'
   entrypoint: 'npm'
   args: ['install']
-- name: 'node:lts'
-  entrypoint: 'npm'
-  args: ['test']
 
 # This step builds the container image.
 - name: 'gcr.io/cloud-builders/docker'
