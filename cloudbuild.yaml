@@ -1,9 +1,9 @@
 steps:
 # This step runs the unit tests on the app
-- name: 'node:12.18.2'
+- name: 'node:lts'
   entrypoint: 'npm'
   args: ['install']
-- name: 'node:12.18.2'
+- name: 'node:lts'
   entrypoint: 'npm'
   args: ['test']
 
