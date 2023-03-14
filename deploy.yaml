@@ -17,8 +17,8 @@ spec:
         app: "nginx-1"
     spec:
       containers:
-      - name: "github-moterom-chat-nodejs-1"
-        image: "gcr.io/kutai-dev/github_moterom_chat-nodejs:$SHORT_SHA"
+      - name: github-moterom-chat-nodejs-1
+        image: gcr.io/kutai-dev/github_moterom_chat-nodejs:$SHORT_SHA
 ---
 apiVersion: "autoscaling/v2"
 kind: "HorizontalPodAutoscaler"
