@@ -1,23 +1,43 @@
-apiVersion: apps/v1
-kind: Deployment
+---
+apiVersion: "apps/v1"
+kind: "Deployment"
 metadata:
-  name: deploy-api-chatnodejs
+  name: "nginx-1"
+  namespace: "default"
+  labels:
+    app: "nginx-1"
 spec:
+  replicas: 3
   selector:
     matchLabels:
-      app: api-chatnodejs
-  replicas: 1
+      app: "nginx-1"
   template:
     metadata:
       labels:
-        app: api-chatnodejs
+        app: "nginx-1"
     spec:
       containers:
-      - name: api-chatnodejs
-        image: gcr.io/kutai-dev/github_moterom_chat-nodejs
-        resources:
-          requests:
-            memory: "64Mi"
-            cpu: "125m"
-        ports:
-        - containerPort: 3000
+      - name: "github-moterom-chat-nodejs-1"
+        image: "gcr.io/kutai-dev/github_moterom_chat-nodejs:$SHORT_SHA"
+---
+apiVersion: "autoscaling/v2"
+kind: "HorizontalPodAutoscaler"
+metadata:
+  name: "nginx-1-hpa-pd3r"
+  namespace: "default"
+  labels:
+    app: "nginx-1"
+spec:
+  scaleTargetRef:
+    kind: "Deployment"
+    name: "nginx-1"
+    apiVersion: "apps/v1"
+  minReplicas: 1
+  maxReplicas: 5
+  metrics:
+  - type: "Resource"
+    resource:
+      name: "cpu"
+      target:
+        type: "Utilization"
+        averageUtilization: 80
