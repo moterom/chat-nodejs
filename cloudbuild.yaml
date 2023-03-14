@@ -21,3 +21,11 @@ steps:
   args:
   - 'push'
   - 'us-central1-docker.pkg.dev/$PROJECT_ID/chat-nodejs/github_moterom_chat-nodejs:$SHORT_SHA'
+
+# deploy container image to GKE
+- name: "gcr.io/cloud-builders/gke-deploy"
+  args:
+  - run
+  - --filename=deploy.yaml
+  - --location=us-central1-c
+  - --cluster=kutai-dev

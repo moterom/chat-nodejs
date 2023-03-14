@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: deploy-api-chatnodejs
+spec:
+  selector:
+    matchLabels:
+      app: api-chatnodejs
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: api-chatnodejs
+    spec:
+      containers:
+      - name: api-chatnodejs
+        image: gcr.io/kutai-dev/github_moterom_chat-nodejs:$SHORT_SHA
+        resources:
+          requests:
+            memory: "64Mi"
+            cpu: "125m"
+        ports:
+        - containerPort: 3000
