@@ -1,5 +1,5 @@
 steps:
-# This step runs the unit tests on the app
+# This step runs the unit tests on the appp
 - name: 'node:lts'
   entrypoint: 'npm'
   args: ['install']
