@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: api-chatnodejs
-        image: gcr.io/kutai-dev/github_moterom_chat-nodejs:$SHORT_SHA
+        image: gcr.io/kutai-dev/github_moterom_chat-nodejs
         resources:
           requests:
             memory: "64Mi"
