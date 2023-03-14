@@ -18,7 +18,7 @@ spec:
     spec:
       containers:
       - name: chatnodejs
-        image: gcr.io/kutai-dev/github_moterom_chat-nodejs:$SHORT_SHA
+        image: gcr.io/kutai-dev/github_moterom_chat-nodejs:latest
 ---
 apiVersion: "autoscaling/v2"
 kind: "HorizontalPodAutoscaler"
