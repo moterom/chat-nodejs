@@ -1,4 +1,3 @@
-
 apiVersion: "apps/v1"
 kind: "Deployment"
 metadata:
@@ -18,7 +17,7 @@ spec:
     spec:
       containers:
       - name: chatnodejs
-        image: gcr.io/kutai-dev/github_moterom_chat-nodejs:latest
+        image: gcr.io/kutai-dev/github_moterom_chat-nodejs:latest # <- reemplaza "latest" con la etiqueta de la imagen que deseas usar
 ---
 apiVersion: "autoscaling/v2"
 kind: "HorizontalPodAutoscaler"
