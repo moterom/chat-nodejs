@@ -2,22 +2,22 @@
 apiVersion: "apps/v1"
 kind: "Deployment"
 metadata:
-  name: "nginx-1"
+  name: chatnodejs
   namespace: "default"
   labels:
-    app: "nginx-1"
+    app: chatnodejs
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: "nginx-1"
+      app: chatnodejs
   template:
     metadata:
       labels:
-        app: "nginx-1"
+        app: chatnodejs
     spec:
       containers:
-      - name: github-moterom-chat-nodejs-1
+      - name: chatnodejs
         image: gcr.io/kutai-dev/github_moterom_chat-nodejs:$SHORT_SHA
 ---
 apiVersion: "autoscaling/v2"
@@ -26,11 +26,11 @@ metadata:
   name: "nginx-1-hpa-pd3r"
   namespace: "default"
   labels:
-    app: "nginx-1"
+    app: chatnodejs
 spec:
   scaleTargetRef:
     kind: "Deployment"
-    name: "nginx-1"
+    name: chatnodejs
     apiVersion: "apps/v1"
   minReplicas: 1
   maxReplicas: 5
