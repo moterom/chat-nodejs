@@ -1,35 +1,36 @@
+---
 apiVersion: "apps/v1"
 kind: "Deployment"
 metadata:
-  name: chatnodejs
+  name: "chatjs"
   namespace: "default"
   labels:
-    app: chatnodejs
+    app: "chatjs"
 spec:
-  replicas: 1
+  replicas: 3
   selector:
     matchLabels:
-      app: chatnodejs
+      app: "chatjs"
   template:
     metadata:
       labels:
-        app: chatnodejs
+        app: "chatjs"
     spec:
       containers:
-      - name: chatnodejs
-        image: gcr.io/kutai-dev/github_moterom_chat-nodejs:latest # <- reemplaza "latest" con la etiqueta de la imagen que deseas usar
+      - name: "github-moterom-chat-nodejs-1"
+        image: "gcr.io/kutai-dev/github_moterom_chat-nodejs:latest"
 ---
 apiVersion: "autoscaling/v2"
 kind: "HorizontalPodAutoscaler"
 metadata:
-  name: "nginx-1-hpa-pd3r"
+  name: "chatjs-hpa-bdof"
   namespace: "default"
   labels:
-    app: chatnodejs
+    app: "chatjs"
 spec:
   scaleTargetRef:
     kind: "Deployment"
-    name: chatnodejs
+    name: "chatjs"
     apiVersion: "apps/v1"
   minReplicas: 1
   maxReplicas: 5
