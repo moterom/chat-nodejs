@@ -18,7 +18,7 @@ spec:
     spec:
       containers:
       - name: "github-moterom-chat-nodejs-1"
-        image: "us-central1-docker.pkg.dev/kutai-dev/chat-nodejs/github_moterom_chat-nodejs:latest"
+        image: "us-central1-docker.pkg.dev/kutai-dev/chat-nodejs/github_moterom_chat-nodejs:6a492ae"
 ---
 apiVersion: "autoscaling/v2"
 kind: "HorizontalPodAutoscaler"
