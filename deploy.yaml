@@ -18,7 +18,7 @@ spec:
     spec:
       containers:
       - name: "chatjs"
-        image: us-central1-docker.pkg.dev/GOOGLE_CLOUD_PROJECT/chat-nodejs/github_moterom_chat-nodejs:COMMIT_SHA
+        image: us-central1-docker.pkg.dev/chat-nodejs/github_moterom_chat-nodejs:COMMIT_SHA
 ---
 apiVersion: "autoscaling/v2"
 kind: "HorizontalPodAutoscaler"
