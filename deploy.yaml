@@ -1,3 +1,4 @@
+---
 apiVersion: "apps/v1"
 kind: "Deployment"
 metadata:
@@ -6,7 +7,7 @@ metadata:
   labels:
     app: "chatjs"
 spec:
-  replicas: 3
+  replicas: 1
   selector:
     matchLabels:
       app: "chatjs"
@@ -18,3 +19,25 @@ spec:
       containers:
       - name: "github-moterom-chat-nodejs-1"
         image: "gcr.io/kutai-dev/github_moterom_chat-nodejs:latest"
+---
+apiVersion: "autoscaling/v2"
+kind: "HorizontalPodAutoscaler"
+metadata:
+  name: "chatjs-hpa-bdof"
+  namespace: "default"
+  labels:
+    app: "chatjs"
+spec:
+  scaleTargetRef:
+    kind: "Deployment"
+    name: "chatjs"
+    apiVersion: "apps/v1"
+  minReplicas: 1
+  maxReplicas: 5
+  metrics:
+  - type: "Resource"
+    resource:
+      name: "cpu"
+      target:
+        type: "Utilization"
+        averageUtilization: 80
